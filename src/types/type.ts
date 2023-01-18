@@ -1,6 +1,6 @@
 export type Item = {
-  itemId: string;
-  itemName: string;
+  todoId: string;
+  todoTitle: string;
   clear: boolean;
-  edit?: false;
+  edit: false | true;
 };

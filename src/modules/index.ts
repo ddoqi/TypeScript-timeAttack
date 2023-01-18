@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import itemReducer from "./itemReducer";
+import todoReducer from "./todoReducer";
 import storage from "redux-persist/lib/storage";
 import { persistReducer } from "redux-persist";
 
@@ -9,7 +9,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  itemReducer,
+  todoReducer,
 });
 
 //

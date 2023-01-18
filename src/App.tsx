@@ -1,6 +1,6 @@
 import "./App.css";
-import InsertItem from "./components/InsertItem";
-import ItemList from "./components/ItemList";
+import InputTodo from "./components/InputTodo";
+import TodoList from "./components/TodoList";
 
 function App() {
   return (
@@ -9,8 +9,8 @@ function App() {
         <div className="header">
           <h1>나의 투두리스트</h1>
         </div>
-        <InsertItem />
-        <ItemList />
+        <InputTodo />
+        <TodoList />
       </div>
     </div>
   );

@@ -1,57 +1,69 @@
 import { Item } from "../types/type";
 import { RootState } from "../modules";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteItem, clearItem, editItem } from "../modules/itemReducer";
+import {
+  deleteTodo,
+  clearStateChange,
+  editTodo,
+  editON,
+  editOFF,
+} from "../modules/todoReducer";
 import { useState } from "react";
 
-const ItemList = () => {
+const TodoList = () => {
   const [newEditName, setNewEditName] = useState("");
-  const [isEdit, setIsEdit] = useState<boolean>(false);
-  const todo = useSelector((state: RootState) => state.itemReducer.todo);
+  const todo = useSelector((state: RootState) => state.todoReducer.todo);
   const dispatch = useDispatch();
 
   const clickDelete = (data: Item) => {
-    dispatch(deleteItem(data.itemId));
+    alert("정말 삭제하겠습니까??");
+    dispatch(deleteTodo(data.todoId));
   };
 
   const clickComplete = (data: Item) => {
-    dispatch(clearItem(data.itemId));
+    dispatch(clearStateChange(data.todoId));
   };
 
-  const editItemName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const editTodoName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewEditName(e.target.value);
   };
 
-  const editButtonOn = () => {
-    setIsEdit(true);
+  const editButtonOn = (data: Item) => {
+    dispatch(editON(data.todoId));
   };
 
   const editCompleted = (data: Item) => {
-    const targetId = data.itemId;
-    dispatch(editItem(targetId, newEditName, false, false));
-    setIsEdit(false);
+    const targetId = data.todoId;
+    if (newEditName.length === 0) {
+      alert("뭐라도 쓰고 완료버튼 누르쇼!!!!");
+      return null;
+    }
+    dispatch(editTodo(targetId, newEditName, false, false));
+    dispatch(editOFF(data.todoId));
+    setNewEditName("");
+    alert("수정 완료~");
   };
 
   return (
     <>
-      <h3> 여기는 do</h3>
+      <h3> 🌸 여기는 do 🌸</h3>
       <ul>
         {todo.map((data: Item) => {
-          if (data.clear === true) {
+          if (data.clear === false) {
             return (
-              <li className="list-item" key={data.itemId}>
+              <li className="list-item" key={data.todoId}>
                 <div>
-                  {isEdit ? (
+                  {data.edit ? (
                     <input
-                      className={isEdit ? "editTrue" : "editFalse"}
                       value={newEditName}
-                      onChange={editItemName}
+                      onChange={editTodoName}
                       type="text"
                     />
                   ) : (
-                    <p className="todo-title">{data.itemName}</p>
+                    <p className="todo-title">{data.todoTitle}</p>
                   )}
                 </div>
+
                 <div>
                   <button
                     className="button-delete"
@@ -61,13 +73,18 @@ const ItemList = () => {
                     className="button-complete"
                     onClick={() => clickComplete(data)}
                   >
-                    {data.clear ? "진행중" : "완료"}
+                    {data.clear ? "ing🔴" : "done🟡"}
                   </button>
-                  <button style={{ margin: 50 }} onClick={() => editButtonOn()}>
+                  <button
+                    className="button-complete"
+                    style={{ backgroundColor: "pink" }}
+                    onClick={() => editButtonOn(data)}
+                  >
                     수정
                   </button>
                   <button
-                    style={{ margin: 50 }}
+                    className="button-complete"
+                    style={{ backgroundColor: "pink" }}
                     onClick={() => editCompleted(data)}
                   >
                     완료
@@ -80,39 +97,45 @@ const ItemList = () => {
       </ul>
 
       <div>
-        <h3>여기는 done</h3>
+        <h3> 🌸 여기는 done 🌸</h3>
         {todo.map((data: Item) => {
-          if (data.clear === false) {
+          if (data.clear === true) {
             return (
-              <li className="list-item" key={data.itemId}>
+              <li className="list-item" key={data.todoId}>
                 <div>
-                  {isEdit ? (
+                  {data.edit ? (
                     <input
-                      className={isEdit ? "editTrue" : "editFalse"}
                       value={newEditName}
-                      onChange={editItemName}
+                      onChange={editTodoName}
                       type="text"
                     />
                   ) : (
-                    <p className="todo-title">{data.itemName}</p>
+                    <p className="todo-title">{data.todoTitle}</p>
                   )}
                 </div>
                 <div>
                   <button
                     className="button-delete"
                     onClick={() => clickDelete(data)}
-                  >{`삭제`}</button>
+                  >
+                    삭제
+                  </button>
                   <button
                     className="button-complete"
                     onClick={() => clickComplete(data)}
                   >
-                    {data.clear ? "진행중" : "완료"}
+                    {data.clear ? "ing🔴" : "done🟡"}
                   </button>
-                  <button style={{ margin: 50 }} onClick={() => editButtonOn()}>
+                  <button
+                    style={{ backgroundColor: "pink" }}
+                    className="button-complete"
+                    onClick={() => editButtonOn(data)}
+                  >
                     수정
                   </button>
                   <button
-                    style={{ margin: 50 }}
+                    className="button-complete"
+                    style={{ backgroundColor: "pink" }}
                     onClick={() => editCompleted(data)}
                   >
                     완료
@@ -127,4 +150,4 @@ const ItemList = () => {
   );
 };
 
-export default ItemList;
+export default TodoList;
